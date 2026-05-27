@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbydxuGZMfnLwMA4aq5wqokyPiZDLxwoCHOMg8LoB38spHGf642c_0Z-i8E7BS5WJ6g/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKNMqjsb1H6ZyGMKwx2IrLbbFzkpkx4DqAFMyAXucjXVLXQcCRWkTxzgci4SuhSgI/exec";
 const DEADLINE_HOUR = 11;
 
 const ROLES = [
