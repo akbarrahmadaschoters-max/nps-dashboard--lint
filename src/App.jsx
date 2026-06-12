@@ -18,8 +18,8 @@ const EMPTY = { reportDay: "Senin", period: "Week 1", tanggal: "", responden: ""
 
 const S = {
   lbl: { display: "block", fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 6 },
-  inp: { width: "100%", padding: "9px 12px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, color: "#e2e8f0", fontSize: 14, boxSizing: "border-box", outline: "none", fontFamily: "inherit" },
-  card: { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 14, padding: 20, marginBottom: 14 },
+  inp: { width: "100%", padding: "9px 12px", background: "#ffffff", border: "1px solid #cbd5e1", borderRadius: 8, color: "#0f172a", fontSize: 14, boxSizing: "border-box", outline: "none", fontFamily: "inherit" },
+  card: { background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 14, padding: 20, marginBottom: 14, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" },
   nav: (a) => ({ padding: "7px 16px", borderRadius: 8, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, background: a ? "#6366f1" : "transparent", color: a ? "#fff" : "#64748b", fontFamily: "inherit" }),
 };
 
@@ -70,16 +70,16 @@ function ReportCard({ r }) {
         </div>
       </div>
       {open && (
-        <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #e2e8f0" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 10 }}>
             {[["Responden", r.responden], ["Rate", r.rate ? `${r.rate}%` : "—"], ["NPS", r.nps || "—"]].map(([k, v]) => (
-              <div key={k} style={{ background: "rgba(0,0,0,0.25)", borderRadius: 8, padding: "10px 12px" }}>
+              <div key={k} style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "10px 12px" }}>
                 <div style={{ fontSize: 10, color: "#64748b", fontWeight: 700, textTransform: "uppercase", marginBottom: 4 }}>{k}</div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: "#e2e8f0" }}>{v || "—"}</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a" }}>{v || "—"}</div>
               </div>
             ))}
           </div>
-          {r.actionplan && <div style={{ background: "rgba(0,0,0,0.2)", borderRadius: 8, padding: "10px 12px", fontSize: 13, color: "#94a3b8", marginBottom: 10 }}><strong style={{ color: "#64748b" }}>Action Plan: </strong>{r.actionplan}</div>}
+          {r.actionplan && <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "10px 12px", fontSize: 13, color: "#475569", marginBottom: 10 }}><strong style={{ color: "#64748b" }}>Action Plan: </strong>{r.actionplan}</div>}
           {t && <div style={{ padding: "8px 12px", borderRadius: 8, background: t.bg, color: t.color, fontSize: 12, border: `1px solid ${t.border}` }}>{t.emoji} <strong>{t.label}:</strong> {t.action}</div>}
         </div>
       )}
@@ -137,20 +137,20 @@ export default function App() {
   const monthKey = new Date().toISOString().slice(0, 7);
 
   if (loading) return (
-    <div style={{ minHeight: "100vh", background: "#070d1a", display: "flex", alignItems: "center", justifyContent: "center", color: "#475569", fontFamily: "system-ui", flexDirection: "column", gap: 12 }}>
+    <div style={{ minHeight: "100vh", background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", color: "#475569", fontFamily: "system-ui", flexDirection: "column", gap: 12 }}>
       <div style={{ fontSize: 36 }}>📊</div><div>Memuat data...</div>
     </div>
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#070d1a", color: "#e2e8f0", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#f8fafc", color: "#0f172a", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap');* { box-sizing: border-box; margin: 0; } input:focus,select:focus,textarea:focus { border-color: rgba(99,102,241,0.6)!important; }`}</style>
 
-      <div style={{ background: "#0a1221", borderBottom: "1px solid rgba(99,102,241,0.18)", position: "sticky", top: 0, zIndex: 50 }}>
+      <div style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0", position: "sticky", top: 0, zIndex: 50, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
         <div style={{ maxWidth: 820, margin: "0 auto", padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 800, background: "linear-gradient(90deg,#a5b4fc,#818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>NPS Weekly Report</div>
-            <div style={{ fontSize: 10, color: "#1e3a5f", fontWeight: 600 }}>LINGUA & INTERTEST · COMPOUNDING</div>
+            <div style={{ fontSize: 15, fontWeight: 800, background: "linear-gradient(90deg,#4f46e5,#6366f1)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>NPS Weekly Report</div>
+            <div style={{ fontSize: 10, color: "#64748b", fontWeight: 600 }}>LINGUA & INTERTEST · COMPOUNDING</div>
           </div>
           <div style={{ display: "flex", gap: 4 }}>
             {[["dashboard","📊 Dashboard"],["form","✏️ Input"],["history","📋 Riwayat"]].map(([v,l]) => (
@@ -218,14 +218,14 @@ export default function App() {
 
         {view === "form" && (
           <div>
-            <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 20, color: "#c7d2fe" }}>✏️ Input Report NPS</div>
+            <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 20, color: "#4f46e5" }}>✏️ Input Report NPS</div>
             {!selectedRole ? (
               <div>
-                <div style={{ fontSize: 14, color: "#64748b", marginBottom: 16 }}>Pilih role kamu:</div>
+                <div style={{ fontSize: 14, color: "#475569", marginBottom: 16 }}>Pilih role kamu:</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                   {ROLES.map(role => (
                     <button key={role.key} onClick={() => setSelectedRole(role.key)}
-                      style={{ padding: "28px 20px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, cursor: "pointer", color: "#e2e8f0", fontFamily: "inherit", textAlign: "left" }}>
+                      style={{ padding: "28px 20px", background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 14, cursor: "pointer", color: "#0f172a", fontFamily: "inherit", textAlign: "left", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
                       <div style={{ fontSize: 28, marginBottom: 8 }}>{role.emoji}</div>
                       <div style={{ fontSize: 15, fontWeight: 700, color: role.color }}>{role.label}</div>
                       <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>{role.subtitle}</div>
@@ -235,13 +235,13 @@ export default function App() {
               </div>
             ) : (
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, padding: "12px 16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, padding: "12px 16px", background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
                   <div style={{ fontSize: 22 }}>{ROLES.find(r=>r.key===selectedRole)?.emoji}</div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 14, fontWeight: 700, color: ROLES.find(r=>r.key===selectedRole)?.color }}>{ROLES.find(r=>r.key===selectedRole)?.label}</div>
                     <div style={{ fontSize: 12, color: "#64748b" }}>{ROLES.find(r=>r.key===selectedRole)?.subtitle}</div>
                   </div>
-                  <button onClick={() => setSelectedRole(null)} style={{ fontSize: 12, color: "#64748b", background: "none", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "4px 10px", cursor: "pointer", fontFamily: "inherit" }}>← Ganti</button>
+                  <button onClick={() => setSelectedRole(null)} style={{ fontSize: 12, color: "#64748b", background: "none", border: "1px solid #cbd5e1", borderRadius: 6, padding: "4px 10px", cursor: "pointer", fontFamily: "inherit" }}>← Ganti</button>
                 </div>
                 <div style={S.card}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: "#6366f1", textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 14 }}>Info Laporan</div>
@@ -251,9 +251,9 @@ export default function App() {
                     <div><label style={S.lbl}>Tanggal</label><input type="date" value={form.tanggal} onChange={e=>setForm(p=>({...p,tanggal:e.target.value}))} style={S.inp}/></div>
                   </div>
                 </div>
-                <div style={{...S.card, border: t?`1px solid ${t.border}`:"1px solid rgba(255,255,255,0.07)"}}>
+                <div style={{...S.card, border: t?`1px solid ${t.border}`:"1px solid #e2e8f0"}}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: "#e2e8f0" }}>{ROLES.find(r=>r.key===selectedRole)?.subtitle}</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "#0f172a" }}>{ROLES.find(r=>r.key===selectedRole)?.subtitle}</div>
                     {t && <TierBadge tier={tier}/>}
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
@@ -282,10 +282,10 @@ export default function App() {
 
         {view === "history" && (
           <div>
-            <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 16, color: "#c7d2fe" }}>📋 Riwayat Report</div>
+            <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 16, color: "#4f46e5" }}>📋 Riwayat Report</div>
             <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
               {[["all","Semua"],["lingua","🔵 Lingua"],["intertest","🟣 Intertest"]].map(([k,l])=>(
-                <button key={k} onClick={()=>setHistFilter(k)} style={{padding:"6px 14px",borderRadius:8,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,background:histFilter===k?"#6366f1":"rgba(255,255,255,0.05)",color:histFilter===k?"#fff":"#64748b",fontFamily:"inherit"}}>{l}</button>
+                <button key={k} onClick={()=>setHistFilter(k)} style={{padding:"6px 14px",borderRadius:8,border:histFilter===k?"1px solid transparent":"1px solid #e2e8f0",cursor:"pointer",fontSize:12,fontWeight:600,background:histFilter===k?"#6366f1":"#ffffff",color:histFilter===k?"#fff":"#475569",fontFamily:"inherit"}}>{l}</button>
               ))}
               <div style={{marginLeft:"auto",fontSize:12,color:"#475569",alignSelf:"center"}}>{filtered.length} laporan</div>
             </div>
