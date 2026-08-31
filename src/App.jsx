@@ -711,88 +711,147 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
           </div>
 
 
-          {/* BREAKDOWN CATEGORY & SUBCATEGORY TABLES WITH NOTABLE SAMPLE COMMENTS */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-            {/* CATEGORY BREAKDOWN CARD */}
-            <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 24, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
-              <h4 style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", marginBottom: 18, display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: 18 }}>💡</span> Mostly Category (Detractor & Passive)
-              </h4>
-              {analytics.topCategories.length === 0 ? <div style={{ fontSize: 13, color: "#94a3b8" }}>Tidak ada data keluhan</div> : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                  {analytics.topCategories.slice(0, 6).map((cat, idx) => (
-                    <div key={idx} style={{ padding: "12px 14px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 16 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#0f172a", fontWeight: 700 }}>
-                        <span>{cat.name}</span>
-                        <span style={{ color: "#2563eb", fontWeight: 800 }}>{cat.count} ({cat.pct}%)</span>
-                      </div>
-                      <div style={{ background: "#e2e8f0", height: 6, borderRadius: 6, marginTop: 6, overflow: "hidden" }}>
-                        <div style={{ width: `${cat.pct}%`, height: "100%", background: "linear-gradient(90deg, #2563eb, #3b82f6)", borderRadius: 6 }}></div>
-                      </div>
-
-                      {/* NOTABLE SAMPLE COMMENTS */}
-                      {cat.samples && cat.samples.length > 0 && (
-                        <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 6 }}>
-                          {cat.samples.map((s, sIdx) => (
-                            <div key={sIdx} style={{ padding: "8px 12px", background: "#ffffff", borderLeft: "3px solid #2563eb", borderRadius: "0 10px 10px 0", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 10, fontWeight: 700, color: "#64748b", marginBottom: 2 }}>
-                                <span>💬 {s.student}</span>
-                                <span style={{ padding: "1px 6px", borderRadius: 10, background: s.score <= 6 ? "#fee2e2" : "#fef3c7", color: s.score <= 6 ? "#dc2626" : "#d97706", fontWeight: 800 }}>
-                                  NPS: {s.score}
-                                </span>
-                              </div>
-                              <div style={{ fontSize: 11, color: "#334155", fontStyle: "italic", lineHeight: 1.4 }}>
-                                "{s.comment.length > 140 ? s.comment.substring(0, 140) + "..." : s.comment}"
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+          {/* SECTION 1: EXECUTIVE SUMMARY CHART VISUAL GRAPHIC */}
+          <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 24, marginBottom: 24, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: "#0f172a", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 20 }}>📊</span> Executive Summary Chart: Distribution per Category & Sub-category
             </div>
+            <div style={{ fontSize: 12, color: "#64748b", marginBottom: 20 }}>Visual ringkasan persentase isu utama (Detractor & Passive) dari total respon.</div>
 
-            {/* SUBCATEGORY BREAKDOWN CARD */}
-            <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 24, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
-              <h4 style={{ fontSize: 15, fontWeight: 800, color: "#0f172a", marginBottom: 18, display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: 18 }}>🔎</span> Mostly Sub-category
-              </h4>
-              {analytics.topSubcategories.length === 0 ? <div style={{ fontSize: 13, color: "#94a3b8" }}>Tidak ada data subkategori</div> : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                  {analytics.topSubcategories.slice(0, 6).map((sub, idx) => (
-                    <div key={idx} style={{ padding: "12px 14px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 16 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#0f172a", fontWeight: 700 }}>
-                        <span>{sub.name}</span>
-                        <span style={{ color: "#6366f1", fontWeight: 800 }}>{sub.count} ({sub.pct}%)</span>
-                      </div>
-                      <div style={{ background: "#e2e8f0", height: 6, borderRadius: 6, marginTop: 6, overflow: "hidden" }}>
-                        <div style={{ width: `${sub.pct}%`, height: "100%", background: "linear-gradient(90deg, #6366f1, #8b5cf6)", borderRadius: 6 }}></div>
-                      </div>
-
-                      {/* NOTABLE SAMPLE COMMENTS */}
-                      {sub.samples && sub.samples.length > 0 && (
-                        <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 6 }}>
-                          {sub.samples.map((s, sIdx) => (
-                            <div key={sIdx} style={{ padding: "8px 12px", background: "#ffffff", borderLeft: "3px solid #6366f1", borderRadius: "0 10px 10px 0", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
-                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 10, fontWeight: 700, color: "#64748b", marginBottom: 2 }}>
-                                <span>💬 {s.student}</span>
-                                <span style={{ padding: "1px 6px", borderRadius: 10, background: s.score <= 6 ? "#fee2e2" : "#fef3c7", color: s.score <= 6 ? "#dc2626" : "#d97706", fontWeight: 800 }}>
-                                  NPS: {s.score}
-                                </span>
-                              </div>
-                              <div style={{ fontSize: 11, color: "#334155", fontStyle: "italic", lineHeight: 1.4 }}>
-                                "{s.comment.length > 140 ? s.comment.substring(0, 140) + "..." : s.comment}"
-                              </div>
-                            </div>
-                          ))}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+              {/* LEFT: CATEGORY VISUAL GRAPHIC */}
+              <div style={{ background: "#f8fafc", border: "1px solid #f1f5f9", borderRadius: 20, padding: 18 }}>
+                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#2563eb", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+                  <span>💡</span> Mostly Category
+                </h5>
+                {analytics.topCategories.length === 0 ? <div style={{ fontSize: 12, color: "#94a3b8" }}>Tidak ada data keluhan</div> : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {analytics.topCategories.slice(0, 6).map((cat, idx) => (
+                      <div key={idx}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#1e293b", fontWeight: 700 }}>
+                          <span>{cat.name}</span>
+                          <span style={{ color: "#2563eb", fontWeight: 800 }}>{cat.count} ({cat.pct}%)</span>
                         </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+                        <div style={{ background: "#e2e8f0", height: 8, borderRadius: 6, marginTop: 5, overflow: "hidden" }}>
+                          <div style={{ width: `${cat.pct}%`, height: "100%", background: "linear-gradient(90deg, #2563eb, #3b82f6)", borderRadius: 6, transition: "width 0.8s ease" }}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* RIGHT: SUBCATEGORY VISUAL GRAPHIC */}
+              <div style={{ background: "#f8fafc", border: "1px solid #f1f5f9", borderRadius: 20, padding: 18 }}>
+                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#6366f1", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+                  <span>🔎</span> Mostly Sub-category
+                </h5>
+                {analytics.topSubcategories.length === 0 ? <div style={{ fontSize: 12, color: "#94a3b8" }}>Tidak ada data subkategori</div> : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {analytics.topSubcategories.slice(0, 6).map((sub, idx) => (
+                      <div key={idx}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#1e293b", fontWeight: 700 }}>
+                          <span>{sub.name}</span>
+                          <span style={{ color: "#6366f1", fontWeight: 800 }}>{sub.count} ({sub.pct}%)</span>
+                        </div>
+                        <div style={{ background: "#e2e8f0", height: 8, borderRadius: 6, marginTop: 5, overflow: "hidden" }}>
+                          <div style={{ width: `${sub.pct}%`, height: "100%", background: "linear-gradient(90deg, #6366f1, #8b5cf6)", borderRadius: 6, transition: "width 0.8s ease" }}></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 2: DETAILING & NOTABLE SAMPLE COMMENTS */}
+          <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 24, marginBottom: 26, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
+            <div style={{ fontSize: 16, fontWeight: 900, color: "#0f172a", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 20 }}>💬</span> Detailing & Sample Feedback Komentar Nyata
+            </div>
+            <div style={{ fontSize: 12, color: "#64748b", marginBottom: 20 }}>Rincian sampel umpan balik langsung dari responden untuk setiap kategori dan subkategori.</div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+              {/* CATEGORY DETAILING & SAMPLES */}
+              <div>
+                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#1e293b", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+                  <span>💡</span> Detailing Sample Komen Kategori
+                </h5>
+                {analytics.topCategories.length === 0 ? <div style={{ fontSize: 12, color: "#94a3b8" }}>Tidak ada data keluhan</div> : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                    {analytics.topCategories.slice(0, 6).map((cat, idx) => (
+                      <div key={idx} style={{ padding: "12px 14px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 16 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#0f172a", fontWeight: 700 }}>
+                          <span>{cat.name}</span>
+                          <span style={{ color: "#2563eb", fontWeight: 800 }}>{cat.count} respon ({cat.pct}%)</span>
+                        </div>
+                        
+                        {/* NOTABLE SAMPLE COMMENTS */}
+                        {cat.samples && cat.samples.length > 0 ? (
+                          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                            {cat.samples.map((s, sIdx) => (
+                              <div key={sIdx} style={{ padding: "8px 12px", background: "#ffffff", borderLeft: "3px solid #2563eb", borderRadius: "0 10px 10px 0", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 10, fontWeight: 700, color: "#64748b", marginBottom: 2 }}>
+                                  <span>💬 {s.student}</span>
+                                  <span style={{ padding: "1px 6px", borderRadius: 10, background: s.score <= 6 ? "#fee2e2" : "#fef3c7", color: s.score <= 6 ? "#dc2626" : "#d97706", fontWeight: 800 }}>
+                                    NPS: {s.score}
+                                  </span>
+                                </div>
+                                <div style={{ fontSize: 11, color: "#334155", fontStyle: "italic", lineHeight: 1.4 }}>
+                                  "{s.comment.length > 140 ? s.comment.substring(0, 140) + "..." : s.comment}"
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div style={{ fontSize: 11, color: "#94a3b8", fontStyle: "italic", marginTop: 6 }}>Komen tidak tersedia.</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* SUBCATEGORY DETAILING & SAMPLES */}
+              <div>
+                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#1e293b", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+                  <span>🔎</span> Detailing Sample Komen Subkategori
+                </h5>
+                {analytics.topSubcategories.length === 0 ? <div style={{ fontSize: 12, color: "#94a3b8" }}>Tidak ada data subkategori</div> : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                    {analytics.topSubcategories.slice(0, 6).map((sub, idx) => (
+                      <div key={idx} style={{ padding: "12px 14px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 16 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#0f172a", fontWeight: 700 }}>
+                          <span>{sub.name}</span>
+                          <span style={{ color: "#6366f1", fontWeight: 800 }}>{sub.count} respon ({sub.pct}%)</span>
+                        </div>
+
+                        {/* NOTABLE SAMPLE COMMENTS */}
+                        {sub.samples && sub.samples.length > 0 ? (
+                          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                            {sub.samples.map((s, sIdx) => (
+                              <div key={sIdx} style={{ padding: "8px 12px", background: "#ffffff", borderLeft: "3px solid #6366f1", borderRadius: "0 10px 10px 0", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 10, fontWeight: 700, color: "#64748b", marginBottom: 2 }}>
+                                  <span>💬 {s.student}</span>
+                                  <span style={{ padding: "1px 6px", borderRadius: 10, background: s.score <= 6 ? "#fee2e2" : "#fef3c7", color: s.score <= 6 ? "#dc2626" : "#d97706", fontWeight: 800 }}>
+                                    NPS: {s.score}
+                                  </span>
+                                </div>
+                                <div style={{ fontSize: 11, color: "#334155", fontStyle: "italic", lineHeight: 1.4 }}>
+                                  "{s.comment.length > 140 ? s.comment.substring(0, 140) + "..." : s.comment}"
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div style={{ fontSize: 11, color: "#94a3b8", fontStyle: "italic", marginTop: 6 }}>Komen tidak tersedia.</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
