@@ -594,6 +594,60 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
             </div>
           </div>
 
+          {/* 3 NEW SEPARATE CARDS: PROMOTER, PASSIVE, DETRACTOR */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 18, marginBottom: 26 }}>
+            {/* PROMOTER CARD */}
+            <div style={{ background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)", border: "1px solid #86efac", borderRadius: 24, padding: 22, color: "#166534", boxShadow: "0 10px 25px rgba(34,197,94,0.08)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "1px", color: "#15803d" }}>PROMOTER (9-10)</div>
+                <div style={{ fontSize: 24 }}>👍</div>
+              </div>
+              <div style={{ fontSize: 42, fontWeight: 900, color: "#15803d", marginTop: 6, letterSpacing: "-1px" }}>
+                {analytics.promoterCount}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#166534", marginTop: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ background: "#ffffff", padding: "2px 10px", borderRadius: 20, border: "1px solid #bbf7d0", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+                  {analytics.totalResponden > 0 ? Math.round((analytics.promoterCount / analytics.totalResponden) * 100) : 0}%
+                </span>
+                <span>dari {analytics.totalResponden} respon</span>
+              </div>
+            </div>
+
+            {/* PASSIVE CARD */}
+            <div style={{ background: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)", border: "1px solid #fde047", borderRadius: 24, padding: 22, color: "#854d0e", boxShadow: "0 10px 25px rgba(234,179,8,0.08)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "1px", color: "#b45309" }}>PASSIVE (7-8)</div>
+                <div style={{ fontSize: 24 }}>😐</div>
+              </div>
+              <div style={{ fontSize: 42, fontWeight: 900, color: "#b45309", marginTop: 6, letterSpacing: "-1px" }}>
+                {analytics.passiveCount}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#854d0e", marginTop: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ background: "#ffffff", padding: "2px 10px", borderRadius: 20, border: "1px solid #fef08a", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+                  {analytics.totalResponden > 0 ? Math.round((analytics.passiveCount / analytics.totalResponden) * 100) : 0}%
+                </span>
+                <span>dari {analytics.totalResponden} respon</span>
+              </div>
+            </div>
+
+            {/* DETRACTOR CARD */}
+            <div style={{ background: "linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)", border: "1px solid #fca5a5", borderRadius: 24, padding: 22, color: "#991b1b", boxShadow: "0 10px 25px rgba(239,68,68,0.08)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "1px", color: "#dc2626" }}>DETRACTOR (0-6)</div>
+                <div style={{ fontSize: 24 }}>👎</div>
+              </div>
+              <div style={{ fontSize: 42, fontWeight: 900, color: "#dc2626", marginTop: 6, letterSpacing: "-1px" }}>
+                {analytics.detractorCount}
+              </div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#991b1b", marginTop: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ background: "#ffffff", padding: "2px 10px", borderRadius: 20, border: "1px solid #fecaca", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
+                  {analytics.totalResponden > 0 ? Math.round((analytics.detractorCount / analytics.totalResponden) * 100) : 0}%
+                </span>
+                <span>dari {analytics.totalResponden} respon</span>
+              </div>
+            </div>
+          </div>
+
           {/* BREAKDOWN CATEGORY & SUBCATEGORY TABLES */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
             <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 24, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
