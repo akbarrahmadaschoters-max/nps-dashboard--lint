@@ -541,16 +541,16 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
             </div>
           </div>
 
-          {/* STAT TILES (MATCHING JET AI BLUE & CIRCULAR RING REFERENCE DESIGN) */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 18, marginBottom: 26 }}>
+          {/* ROW 1: 4 MAIN OVERVIEW STAT TILES */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 18, marginBottom: 20 }}>
             
-            {/* CARD 1: CIRCULAR GAUGE RING FOR NPS SCORE (MATCHING 75% RING IN REFERENCE SCREENSHOT) */}
+            {/* CARD 1: CIRCULAR GAUGE RING FOR NPS SCORE */}
             <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 22, boxShadow: "0 10px 30px rgba(37,99,235,0.05)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative" }}>
               <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: 8 }}>NPS SCORE</div>
               
               {/* CIRCULAR SVG RING */}
-              <div style={{ position: "relative", width: 110, height: 110, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="110" height="110" viewBox="0 0 100 100">
+              <div style={{ position: "relative", width: 100, height: 100, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <svg width="100" height="100" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="40" stroke="#f1f5f9" strokeWidth="10" fill="transparent" />
                   <circle cx="50" cy="50" r="40" stroke="url(#npsGradient)" strokeWidth="10" fill="transparent" strokeDasharray="251.2" strokeDashoffset={251.2 - (251.2 * Math.max(0, Math.min(100, analytics.npsScore))) / 100} strokeLinecap="round" transform="rotate(-90 50 50)" style={{ transition: "stroke-dashoffset 1s ease" }} />
                   <defs>
@@ -560,41 +560,43 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
                     </linearGradient>
                   </defs>
                 </svg>
-                <div style={{ position: "absolute", fontSize: 32, fontWeight: 900, color: "#0f172a", letterSpacing: "-1px" }}>
+                <div style={{ position: "absolute", fontSize: 30, fontWeight: 900, color: "#0f172a", letterSpacing: "-1px" }}>
                   {analytics.npsScore}
                 </div>
               </div>
-
-              <div style={{ fontSize: 11, color: "#64748b", marginTop: 10, fontWeight: 600 }}>👍 {analytics.promoterCount} P · 😐 {analytics.passiveCount} Pass · 👎 {analytics.detractorCount} Det</div>
             </div>
 
-            {/* CARD 2: VIBRANT COBALT BLUE GRADIENT CARD (MATCHING JET AI SPEED BLUE CARD IN REFERENCE SCREENSHOT) */}
-            <div style={{ background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", borderRadius: 24, padding: 22, color: "#ffffff", boxShadow: "0 10px 25px rgba(37,99,235,0.3)" }}>
+            {/* CARD 2: VIBRANT COBALT BLUE GRADIENT CARD */}
+            <div style={{ background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)", borderRadius: 24, padding: 22, color: "#ffffff", boxShadow: "0 10px 25px rgba(37,99,235,0.25)", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "1px", opacity: 0.9 }}>STATUS TIER</div>
               {analytics.tier && TIER[analytics.tier] ? (
-                <div style={{ marginTop: 10 }}>
+                <div>
                   <TierBadge tier={analytics.tier} />
-                  <div style={{ fontSize: 12, color: "#eff6ff", marginTop: 12, lineHeight: 1.4, fontWeight: 500 }}>{TIER[analytics.tier].action}</div>
+                  <div style={{ fontSize: 11, color: "#eff6ff", marginTop: 8, lineHeight: 1.3, fontWeight: 500 }}>{TIER[analytics.tier].action}</div>
                 </div>
               ) : <div style={{ fontSize: 13, color: "#bfdbfe", marginTop: 8 }}>—</div>}
             </div>
 
-            {/* CARD 3: PURE WHITE CARD WITH SOFT SHADOW */}
-            <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 22, color: "#0f172a", boxShadow: "0 10px 30px rgba(0,0,0,0.03)", cursor: "pointer" }} onClick={() => setAirtableSubTab("untagged")}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: "#2563eb", textTransform: "uppercase", letterSpacing: "1px" }}>TIKET BELUM DI-TAG</div>
-              <div style={{ fontSize: 44, fontWeight: 900, color: analytics.untaggedList.length > 0 ? "#dc2626" : "#059669", marginTop: 4, letterSpacing: "-1px" }}>{analytics.untaggedList.length}</div>
-              <div style={{ fontSize: 11, color: "#2563eb", marginTop: 4, fontWeight: 800 }}>Lihat daftar untagged →</div>
+            {/* CARD 3: TIKET BELUM DI-TAG */}
+            <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 22, color: "#0f172a", boxShadow: "0 10px 30px rgba(0,0,0,0.03)", display: "flex", flexDirection: "column", justifyContent: "space-between", cursor: "pointer" }} onClick={() => setAirtableSubTab("untagged")}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 800, color: "#2563eb", textTransform: "uppercase", letterSpacing: "1px" }}>TIKET BELUM DI-TAG</div>
+                <div style={{ fontSize: 40, fontWeight: 900, color: analytics.untaggedList.length > 0 ? "#dc2626" : "#059669", marginTop: 4, letterSpacing: "-1px" }}>{analytics.untaggedList.length}</div>
+              </div>
+              <div style={{ fontSize: 11, color: "#2563eb", marginTop: 8, fontWeight: 800 }}>Lihat daftar untagged →</div>
             </div>
 
-            {/* CARD 4: SOFT ICE BLUE GLASS CARD */}
-            <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 24, padding: 22, color: "#1e3a8a", cursor: "pointer" }} onClick={() => setAirtableSubTab("unfollowed")}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: "#1d4ed8", textTransform: "uppercase", letterSpacing: "1px" }}>TIKET BELUM DI-FU</div>
-              <div style={{ fontSize: 44, fontWeight: 900, color: analytics.unfollowedList.length > 0 ? "#d97706" : "#059669", marginTop: 4, letterSpacing: "-1px" }}>{analytics.unfollowedList.length}</div>
-              <div style={{ fontSize: 11, color: "#1d4ed8", marginTop: 4, fontWeight: 800 }}>Lihat daftar unfollowed →</div>
+            {/* CARD 4: TIKET BELUM DI-FU */}
+            <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 22, color: "#0f172a", boxShadow: "0 10px 30px rgba(0,0,0,0.03)", display: "flex", flexDirection: "column", justifyContent: "space-between", cursor: "pointer" }} onClick={() => setAirtableSubTab("unfollowed")}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 800, color: "#d97706", textTransform: "uppercase", letterSpacing: "1px" }}>TIKET BELUM DI-FU</div>
+                <div style={{ fontSize: 40, fontWeight: 900, color: analytics.unfollowedList.length > 0 ? "#d97706" : "#059669", marginTop: 4, letterSpacing: "-1px" }}>{analytics.unfollowedList.length}</div>
+              </div>
+              <div style={{ fontSize: 11, color: "#d97706", marginTop: 8, fontWeight: 800 }}>Lihat daftar unfollowed →</div>
             </div>
           </div>
 
-          {/* 3 NEW SEPARATE CARDS: PROMOTER, PASSIVE, DETRACTOR */}
+          {/* ROW 2: 3 RESPONSE BREAKDOWN CARDS (PROMOTER, PASSIVE, DETRACTOR) */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 18, marginBottom: 26 }}>
             {/* PROMOTER CARD */}
             <div style={{ background: "linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)", border: "1px solid #86efac", borderRadius: 24, padding: 22, color: "#166534", boxShadow: "0 10px 25px rgba(34,197,94,0.08)" }}>
@@ -647,6 +649,7 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
               </div>
             </div>
           </div>
+
 
           {/* BREAKDOWN CATEGORY & SUBCATEGORY TABLES */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
