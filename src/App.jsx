@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { exportAirtableSyncToExcel, exportSingleRecordListToExcel, exportHistoryToExcel } from "./utils/exportToExcel";
 
 // --- ORIGINAL GOOGLE APPS SCRIPT CONFIG ---
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKNMqjsb1H6ZyGMKwx2IrLbbFzkpkx4DqAFMyAXucjXVLXQcCRWkTxzgci4SuhSgI/exec";
@@ -432,9 +433,14 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
 
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
           {records.length > 0 && (
-            <button onClick={handleDownloadPDF} style={{ padding: "9px 18px", borderRadius: 30, border: "1px solid #cbd5e1", background: "#ffffff", color: "#0f172a", fontSize: 12, fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-              <span>📄</span> Export / Download PDF
-            </button>
+            <>
+              <button onClick={() => exportAirtableSyncToExcel(filteredRecords, analytics, { activeRole, startDate, endDate })} style={{ padding: "9px 18px", borderRadius: 30, border: "1px solid #10b981", background: "linear-gradient(135deg, #059669, #10b981)", color: "#ffffff", fontSize: 12, fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, boxShadow: "0 4px 14px rgba(16,185,129,0.25)" }}>
+                <span>📊</span> Export to Excel (.xlsx)
+              </button>
+              <button onClick={handleDownloadPDF} style={{ padding: "9px 18px", borderRadius: 30, border: "1px solid #cbd5e1", background: "#ffffff", color: "#0f172a", fontSize: 12, fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                <span>📄</span> Export / Download PDF
+              </button>
+            </>
           )}
 
           <div style={{ display: "flex", gap: 4, background: "#f1f5f9", padding: 4, borderRadius: 30, border: "1px solid #e2e8f0" }}>
@@ -642,6 +648,9 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
             <input type="text" placeholder="🔍 Cari nama, mentor, atau feedback..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} style={{ padding: "10px 16px", background: "#f8fafc", border: "1px solid #cbd5e1", borderRadius: 12, color: "#0f172a", fontSize: 13, width: 280, outline: "none" }} />
             
             <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 12, color: "#64748b" }}>
+              <button onClick={() => exportSingleRecordListToExcel(searchedRecords, `NPS_Raw_Records_${activeRole}.xlsx`, "Raw Records")} style={{ padding: "7px 14px", borderRadius: 20, border: "1px solid #059669", background: "#ecfdf5", color: "#047857", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+                <span>📥</span> Export Raw (.xlsx)
+              </button>
               <span>Tampilkan per halaman:</span>
               <select value={pageSize} onChange={(e) => { setPageSize(e.target.value); setCurrentPage(1); }} style={{ padding: "6px 12px", background: "#ffffff", border: "1px solid #cbd5e1", borderRadius: 8, color: "#0f172a", fontSize: 12, fontWeight: 700, outline: "none" }}>
                 <option value={10}>10</option>
@@ -708,7 +717,14 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
       {/* UNTAGGED SUBTAB */}
       {airtableSubTab === "untagged" && (
         <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 24, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
-          <h4 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 16 }}>🏷️ Tiket Belum Di-Tag ({analytics.untaggedList.length})</h4>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <h4 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", margin: 0 }}>🏷️ Tiket Belum Di-Tag ({analytics.untaggedList.length})</h4>
+            {analytics.untaggedList.length > 0 && (
+              <button onClick={() => exportSingleRecordListToExcel(analytics.untaggedList, `NPS_Untagged_${activeRole}.xlsx`, "Belum Tagged")} style={{ padding: "7px 14px", borderRadius: 20, border: "1px solid #059669", background: "#ecfdf5", color: "#047857", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+                <span>📥</span> Export Untagged (.xlsx)
+              </button>
+            )}
+          </div>
           {analytics.untaggedList.map((r, i) => (
             <div key={i} style={{ padding: 12, borderBottom: "1px solid #f1f5f9", fontSize: 13 }}>
               <div style={{ fontWeight: 700, color: "#0f172a" }}>{r.fields["Name"] || "Student"} — NPS: {r.fields["NPS Score"]}</div>
@@ -721,7 +737,14 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
       {/* UNFOLLOWED SUBTAB */}
       {airtableSubTab === "unfollowed" && (
         <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 24, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
-          <h4 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 16 }}>📞 Tiket Belum Di-Follow Up ({analytics.unfollowedList.length})</h4>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+            <h4 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", margin: 0 }}>📞 Tiket Belum Di-Follow Up ({analytics.unfollowedList.length})</h4>
+            {analytics.unfollowedList.length > 0 && (
+              <button onClick={() => exportSingleRecordListToExcel(analytics.unfollowedList, `NPS_Belum_FU_${activeRole}.xlsx`, "Belum Follow Up")} style={{ padding: "7px 14px", borderRadius: 20, border: "1px solid #059669", background: "#ecfdf5", color: "#047857", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+                <span>📥</span> Export Belum FU (.xlsx)
+              </button>
+            )}
+          </div>
           {analytics.unfollowedList.map((r, i) => (
             <div key={i} style={{ padding: 12, borderBottom: "1px solid #f1f5f9", fontSize: 13 }}>
               <div style={{ fontWeight: 700, color: "#d97706" }}>{r.fields["Name"] || "Student"} — Score: {r.fields["NPS Score"]}</div>
@@ -1351,11 +1374,18 @@ export default function App() {
         {view === "history" && (
           <div>
             <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 18, color: "#2563eb" }}>📋 Riwayat Report</div>
-            <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+            <div style={{ display: "flex", gap: 8, marginBottom: 18, alignItems: "center", flexWrap: "wrap" }}>
               {[["all","Semua"],["lingua","🔵 Lingua"],["intertest","🟣 Intertest"]].map(([k,l])=>(
                 <button key={k} onClick={()=>setHistFilter(k)} style={{padding:"8px 18px",borderRadius:24,border:histFilter===k?"1px solid transparent":"1px solid #cbd5e1",cursor:"pointer",fontSize:12,fontWeight:700,background:histFilter===k?"#0f172a":"#ffffff",color:histFilter===k?"#fff":"#475569",fontFamily:"inherit"}}>{l}</button>
               ))}
-              <div style={{marginLeft:"auto",fontSize:12,color:"#64748b",alignSelf:"center"}}>{filtered.length} laporan</div>
+              <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:12}}>
+                {filtered.length > 0 && (
+                  <button onClick={() => exportHistoryToExcel(filtered)} style={{ padding: "7px 16px", borderRadius: 20, border: "1px solid #059669", background: "linear-gradient(135deg, #059669, #10b981)", color: "#ffffff", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, boxShadow: "0 2px 8px rgba(16,185,129,0.2)" }}>
+                    <span>📊</span> Export Riwayat (.xlsx)
+                  </button>
+                )}
+                <div style={{fontSize:12,color:"#64748b"}}>{filtered.length} laporan</div>
+              </div>
             </div>
             {filtered.length===0
               ?<div style={{...S.card,textAlign:"center",padding:48,color:"#64748b"}}>Tidak ada data</div>
