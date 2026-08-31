@@ -88,10 +88,9 @@ function ReportCard({ r }) {
   );
 }
 
-// --- AIRTABLE CONFIG & EXACT VIEW RULES ---
-const AIRTABLE_API_KEY = import.meta.env.VITE_AIRTABLE_API_KEY || "";
-const AIRTABLE_BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID || "appdUbcKOQlcCnfNC";
-const AIRTABLE_TABLE_ID = import.meta.env.VITE_AIRTABLE_TABLE_ID || "tblD7hlP3deUSoEn1";
+// --- EXACT VIEW RULES ---
+// Airtable credentials live server-side only; the client calls the
+// /api/airtable-records Netlify Function instead of Airtable directly.
 
 function formatDateISO(d) {
   const date = new Date(d);
@@ -198,11 +197,6 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
   const [pageSize, setPageSize] = useState(25);
 
   async function handleRunSync(targetRole) {
-    if (!AIRTABLE_API_KEY || AIRTABLE_API_KEY.includes("YOUR_AIRTABLE")) {
-      setErrorMsg("⚠️ Personal Access Token Airtable belum dipaste di file .env!");
-      return;
-    }
-
     setErrorMsg("");
     setSaveSuccessMsg("");
     setLoading(true);
@@ -210,48 +204,25 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
     setActiveRole(targetRole);
 
     try {
-      let formulaParts = [];
-      if (startDate) formulaParts.push(`DATESTR({Submission Date}) >= '${startDate}'`);
-      if (endDate) formulaParts.push(`DATESTR({Submission Date}) <= '${endDate}'`);
-      
-      let formula = formulaParts.length > 0 ? `AND(${formulaParts.join(",")})` : "";
+      const params = new URLSearchParams();
+      if (startDate) params.append("startDate", startDate);
+      if (endDate) params.append("endDate", endDate);
 
-      let allFetched = [];
-      let offset = null;
+      const res = await fetch(`/api/airtable-records?${params.toString()}`);
+      const json = await res.json().catch(() => ({}));
 
-      do {
-        let params = new URLSearchParams({
-          pageSize: "100",
-          "sort[0][field]": "Submission Date",
-          "sort[0][direction]": "desc"
-        });
-        
-        if (formula) params.append("filterByFormula", formula);
-        if (offset) params.append("offset", offset);
+      if (!res.ok) {
+        throw new Error(json.error || `Airtable HTTP error ${res.status}`);
+      }
 
-        const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?${params.toString()}`;
-
-        const res = await fetch(url, {
-          headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` },
-        });
-
-        if (!res.ok) {
-          const errJson = await res.json().catch(() => ({}));
-          throw new Error(errJson.error?.message || `Airtable HTTP error ${res.status}`);
-        }
-
-        const json = await res.json();
-        allFetched = allFetched.concat(json.records || []);
-        offset = json.offset;
-      } while (offset);
-
-      setRecords(allFetched);
+      const fetchedRecords = json.records || [];
+      setRecords(fetchedRecords);
       setCurrentPage(1);
       setLastFetchedInfo({
         role: targetRole,
         roleName: roleName,
         timestamp: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
-        totalFetched: allFetched.length,
+        totalFetched: fetchedRecords.length,
         startDate,
         endDate,
       });
