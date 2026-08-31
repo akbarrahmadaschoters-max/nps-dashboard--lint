@@ -47,28 +47,56 @@ function TierBadge({ tier, small }) {
   return <span style={{ padding: small ? "2px 8px" : "5px 14px", borderRadius: 20, background: t.bg, color: t.color, fontSize: small ? 10 : 11, fontWeight: 800, border: `1px solid ${t.border}`, whiteSpace: "nowrap" }}>{t.emoji} {t.label}</span>;
 }
 
-function ReportCard({ r }) {
+function ReportCard({ r, onDelete }) {
   const [open, setOpen] = useState(false);
   const role = ROLES.find(x => x.key === r.role);
   const t = r.tier ? TIER[r.tier] : null;
   const d = new Date(r.createdat || r.createdAt);
+  const targetId = r.id || r._id || r.createdAt || r.createdat;
+
   return (
     <div style={S.card}>
-      <div onClick={() => setOpen(!open)} style={{ cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div onClick={() => setOpen(!open)} style={{ cursor: "pointer", flex: 1 }}>
           <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
             <span>{role?.emoji}</span>
             <span style={{ fontSize: 14, fontWeight: 800, color: role?.color }}>{role?.label}</span>
             <span style={{ fontSize: 12, color: "#64748b" }}>— {r.hari} · {r.periode}</span>
           </div>
           <div style={{ fontSize: 11, color: "#94a3b8", display: "flex", gap: 8, alignItems: "center" }}>
-            <span>📅 {d.toLocaleDateString("id-ID", { weekday: "short", day: "numeric", month: "short", year: "numeric" })} · 🕐 {d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}</span>
+            <span>📅 {isNaN(d.getTime()) ? (r.tanggal || "—") : d.toLocaleDateString("id-ID", { weekday: "short", day: "numeric", month: "short", year: "numeric" })} · 🕐 {isNaN(d.getTime()) ? "" : d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}</span>
             {(r.late === true || r.late === "TRUE") && <span style={{ color: "#dc2626", fontWeight: 700, background: "#fee2e2", border: "1px solid #fca5a5", padding: "1px 8px", borderRadius: 10, fontSize: 10 }}>TERLAMBAT</span>}
           </div>
         </div>
-        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           {t && <TierBadge tier={r.tier} />}
-          <span style={{ color: "#94a3b8", fontSize: 11 }}>{open ? "▲" : "▼"}</span>
+          {onDelete && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(targetId);
+              }}
+              title="Hapus Report Ini"
+              style={{
+                padding: "5px 12px",
+                borderRadius: 16,
+                border: "1px solid #fecaca",
+                background: "#fef2f2",
+                color: "#dc2626",
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                boxShadow: "0 2px 4px rgba(220,38,38,0.05)",
+                transition: "all 0.2s ease"
+              }}
+            >
+              <span>🗑️</span> Hapus
+            </button>
+          )}
+          <span onClick={() => setOpen(!open)} style={{ color: "#94a3b8", fontSize: 11, cursor: "pointer", padding: "4px 6px" }}>{open ? "▲" : "▼"}</span>
         </div>
       </div>
       {open && (
@@ -1016,6 +1044,23 @@ export default function App() {
     setLoading(false);
   }
 
+  async function handleDeleteReport(targetId) {
+    if (!targetId) return;
+    const confirmDelete = window.confirm("Apakah Anda yakin ingin menghapus laporan ini?");
+    if (!confirmDelete) return;
+
+    setReports((prev) => prev.filter((r) => (r.id || r._id || r.createdAt || r.createdat) !== targetId));
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "delete", id: targetId, createdAt: targetId }),
+      });
+    } catch (err) {
+      console.error("Failed to delete report on Apps Script:", err);
+    }
+  }
+
   async function handleSubmit() {
     if (responden === "" || !form.rate || nps === "") { alert("⚠️ Harap isi Promoter, Passive, Detractor, dan Rate."); return; }
     setStatus("saving");
@@ -1422,7 +1467,7 @@ export default function App() {
             <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 14 }}>Report Terbaru</div>
             {reports.length === 0
               ? <div style={{...S.card,textAlign:"center",padding:"50px 20px"}}><div style={{fontSize:40,marginBottom:10}}>📭</div><div style={{color:"#64748b",marginBottom:14}}>Belum ada data.</div><button onClick={()=>setView("form")} style={{padding:"10px 28px",background:"linear-gradient(135deg, #2563eb, #3b82f6)",color:"#fff",border:"none",borderRadius:30,cursor:"pointer",fontSize:14,fontWeight:800,fontFamily:"inherit"}}>+ Input Sekarang</button></div>
-              : reports.slice(0,6).map((r,i)=><ReportCard key={i} r={r}/>)}
+              : reports.slice(0,6).map((r,i)=><ReportCard key={r.id || r.createdAt || i} r={r} onDelete={handleDeleteReport}/>)}
           </div>
         )}
 
@@ -1518,7 +1563,7 @@ export default function App() {
             </div>
             {filtered.length===0
               ?<div style={{...S.card,textAlign:"center",padding:48,color:"#64748b"}}>Tidak ada data</div>
-              :filtered.map((r,i)=><ReportCard key={i} r={r}/>)}
+              :filtered.map((r,i)=><ReportCard key={r.id || r.createdAt || i} r={r} onDelete={handleDeleteReport}/>)}
           </div>
         )}
 
