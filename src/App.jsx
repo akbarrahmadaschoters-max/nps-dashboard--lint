@@ -119,8 +119,8 @@ function ReportCard({ r, onDelete }) {
 
 // --- AIRTABLE CONFIG & EXACT VIEW RULES ---
 const AIRTABLE_API_KEY = import.meta.env.VITE_AIRTABLE_API_KEY || "";
-const AIRTABLE_BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID || "appdUbcKOQlcCnfNC";
-const AIRTABLE_TABLE_ID = import.meta.env.VITE_AIRTABLE_TABLE_ID || "tblD7hlP3deUSoEn1";
+const AIRTABLE_BASE_ID = import.meta.env.VITE_AIRTABLE_BASE_ID || "";
+const AIRTABLE_TABLE_ID = import.meta.env.VITE_AIRTABLE_TABLE_ID || "";
 
 function formatDateISO(d) {
   const date = new Date(d);
