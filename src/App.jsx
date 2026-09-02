@@ -128,6 +128,22 @@ function formatDateISO(d) {
   return date.toISOString().split("T")[0];
 }
 
+function getReportMonth(r) {
+  if (!r) return "";
+  const val = r.tanggal || r.createdat || r.createdAt;
+  if (!val) return "";
+  if (typeof val === "number") {
+    const d = new Date(val);
+    return isNaN(d.getTime()) ? "" : d.toISOString().slice(0, 7);
+  }
+  const str = String(val).trim();
+  if (str.length >= 7 && str.includes("-")) {
+    return str.slice(0, 7);
+  }
+  const d = new Date(str);
+  return isNaN(d.getTime()) ? "" : d.toISOString().slice(0, 7);
+}
+
 // Extract Category using exact Airtable column
 function getCategoryVal(fields) {
   const candidates = [
@@ -799,7 +815,7 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
                                   </span>
                                 </div>
                                 <div style={{ fontSize: 11, color: "#334155", fontStyle: "italic", lineHeight: 1.4 }}>
-                                  "{s.comment.length > 140 ? s.comment.substring(0, 140) + "..." : s.comment}"
+                                  "{String(s.comment || "").length > 140 ? String(s.comment || "").substring(0, 140) + "..." : String(s.comment || "")}"
                                 </div>
                               </div>
                             ))}
@@ -839,7 +855,7 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
                                   </span>
                                 </div>
                                 <div style={{ fontSize: 11, color: "#334155", fontStyle: "italic", lineHeight: 1.4 }}>
-                                  "{s.comment.length > 140 ? s.comment.substring(0, 140) + "..." : s.comment}"
+                                  "{String(s.comment || "").length > 140 ? String(s.comment || "").substring(0, 140) + "..." : String(s.comment || "")}"
                                 </div>
                               </div>
                             ))}
@@ -1194,9 +1210,9 @@ export default function App() {
   const filtered = histFilter === "all" ? reports : reports.filter(r => r.role === histFilter);
   const monthKey = new Date().toISOString().slice(0, 7);
 
-  const availableMonths = [...new Set(reports.map(r => (r.tanggal || r.createdat || r.createdAt || "").substring(0, 7)))].filter(Boolean).sort().reverse();
+  const availableMonths = [...new Set(reports.map(r => getReportMonth(r)))].filter(Boolean).sort().reverse();
   const chartData = reports.filter(r => {
-    const m = (r.tanggal || r.createdat || r.createdAt || "").substring(0, 7);
+    const m = getReportMonth(r);
     if (chartFilterMonth !== "all" && m !== chartFilterMonth) return false;
     if (chartFilterRole !== "all" && r.role !== chartFilterRole) return false;
     if (chartFilterPeriod !== "all" && r.periode !== chartFilterPeriod) return false;
@@ -1278,7 +1294,7 @@ export default function App() {
                 <div>
                   <div style={{ fontSize: 11, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px" }}>Bulan Ini</div>
                   <div style={{ fontSize: 36, fontWeight: 900, color: "#0284c7", marginTop: 4, letterSpacing: "-1px" }}>
-                    {reports.filter(r=>r.createdat?.startsWith(monthKey)||r.createdAt?.startsWith(monthKey)).length}
+                    {reports.filter(r => getReportMonth(r) === monthKey).length}
                   </div>
                   <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 4, fontWeight: 500 }}>Periode {monthKey}</div>
                 </div>
