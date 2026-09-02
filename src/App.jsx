@@ -401,6 +401,7 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
         categoryMap[cat] = (categoryMap[cat] || 0) + 1;
         subcategoryMap[sub] = (subcategoryMap[sub] || 0) + 1;
 
+        const rawComment = f["Hal yang bisa ditingkatkan"] || f["Saran/Kritik"] || f["Hal yang puas"] || f["Yang disukai"] || "";
         const commentStr = String(rawComment).trim();
         if (commentStr && commentStr.length > 3) {
           const prog = isLinguaRecord(f) ? "lingua" : isIntertestRecord(f) ? "intertest" : (activeRole === "lingua" ? "lingua" : activeRole === "intertest" ? "intertest" : "lingua");
