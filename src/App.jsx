@@ -401,13 +401,14 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
         categoryMap[cat] = (categoryMap[cat] || 0) + 1;
         subcategoryMap[sub] = (subcategoryMap[sub] || 0) + 1;
 
-        const rawComment = f["Hal yang bisa ditingkatkan"] || f["Saran/Kritik"] || f["Hal yang puas"] || f["Yang disukai"] || "";
         const commentStr = String(rawComment).trim();
         if (commentStr && commentStr.length > 3) {
+          const prog = isLinguaRecord(f) ? "lingua" : isIntertestRecord(f) ? "intertest" : (activeRole === "lingua" ? "lingua" : activeRole === "intertest" ? "intertest" : "lingua");
           const sampleItem = {
             student: f["Name"] || f["Upper name"] || "Student",
             score: !isNaN(score) ? score : (f["Classification"] || "-"),
-            comment: commentStr
+            comment: commentStr,
+            program: prog
           };
 
           if (!categorySamplesMap[cat]) categorySamplesMap[cat] = [];
@@ -854,25 +855,57 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
                         {/* NOTABLE SAMPLE COMMENTS */}
                         {cat.samples && cat.samples.length > 0 ? (
                           <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 10 }}>
-                            {cat.samples.map((s, sIdx) => (
-                              <div key={sIdx} style={{ position: "relative", padding: "12px 14px 12px 18px", background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(241, 245, 249, 0.9)", borderRadius: 14, boxShadow: "0 2px 8px rgba(15, 23, 42, 0.03)", overflow: "hidden" }}>
-                                <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: "linear-gradient(180deg, #2563eb 0%, #60a5fa 100%)", borderRadius: "4px 0 0 4px" }} />
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                    <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#eff6ff", color: "#2563eb", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #bfdbfe" }}>
-                                      {s.student ? s.student.charAt(0).toUpperCase() : "👤"}
+                            {cat.samples.map((s, sIdx) => {
+                              const isLingua = s.program === "lingua" || (activeRole === "lingua" && s.program !== "intertest");
+                              const isIntertest = s.program === "intertest" || (activeRole === "intertest" && s.program !== "lingua");
+
+                              const cardBg = isLingua
+                                ? "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)"
+                                : isIntertest
+                                ? "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)"
+                                : "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)";
+
+                              const borderStyle = isLingua
+                                ? "1px solid #1e40af"
+                                : isIntertest
+                                ? "1px solid #7dd3fc"
+                                : "1px solid #334155";
+
+                              const textColor = isLingua ? "#ffffff" : isIntertest ? "#0369a1" : "#ffffff";
+                              const commentColor = isLingua ? "#dbeafe" : isIntertest ? "#334155" : "#cbd5e1";
+                              const circleBg = isLingua ? "rgba(255,255,255,0.2)" : isIntertest ? "rgba(2,132,199,0.18)" : "rgba(255,255,255,0.2)";
+                              const circleBorder = isLingua ? "1px solid rgba(255,255,255,0.35)" : isIntertest ? "1px solid rgba(2,132,199,0.35)" : "1px solid rgba(255,255,255,0.35)";
+                              const icon = isLingua ? "📚" : isIntertest ? "🧮" : "🌐";
+
+                              return (
+                                <div key={sIdx} style={{ position: "relative", padding: "12px 14px", background: cardBg, border: borderStyle, borderRadius: 14, boxShadow: "0 6px 16px rgba(0,0,0,0.08)", overflow: "hidden" }}>
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                      <div style={{ width: 26, height: 26, borderRadius: "50%", background: circleBg, border: circleBorder, color: textColor, fontSize: 13, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+                                        {icon}
+                                      </div>
+                                      <span style={{ fontSize: 12, fontWeight: 800, color: textColor, letterSpacing: "0.2px" }}>
+                                        {s.student || "Responden"}
+                                      </span>
                                     </div>
-                                    <span style={{ fontSize: 11, fontWeight: 800, color: "#334155" }}>{s.student || "Responden"}</span>
+                                    <span style={{
+                                      padding: "2px 8px",
+                                      borderRadius: 12,
+                                      background: s.score <= 6 ? (isLingua ? "rgba(220, 38, 38, 0.35)" : "rgba(254, 226, 226, 0.9)") : s.score <= 8 ? (isLingua ? "rgba(217, 119, 6, 0.35)" : "rgba(254, 243, 199, 0.9)") : (isLingua ? "rgba(5, 150, 105, 0.35)" : "rgba(209, 250, 229, 0.9)"),
+                                      color: s.score <= 6 ? (isLingua ? "#fca5a5" : "#b91c1c") : s.score <= 8 ? (isLingua ? "#fde68a" : "#b45309") : (isLingua ? "#a7f3d0" : "#047857"),
+                                      border: `1px solid ${s.score <= 6 ? "#fca5a5" : s.score <= 8 ? "#fde68a" : "#a7f3d0"}`,
+                                      fontSize: 10,
+                                      fontWeight: 800
+                                    }}>
+                                      NPS: {s.score}
+                                    </span>
                                   </div>
-                                  <span style={{ padding: "2px 8px", borderRadius: 12, background: s.score <= 6 ? "rgba(254, 226, 226, 0.75)" : s.score <= 8 ? "rgba(254, 243, 199, 0.75)" : "rgba(209, 250, 229, 0.75)", color: s.score <= 6 ? "#b91c1c" : s.score <= 8 ? "#b45309" : "#047857", border: `1px solid ${s.score <= 6 ? "rgba(252, 165, 165, 0.7)" : s.score <= 8 ? "rgba(252, 211, 77, 0.7)" : "rgba(110, 231, 183, 0.7)"}`, fontSize: 10, fontWeight: 800 }}>
-                                    NPS: {s.score}
-                                  </span>
+                                  <div style={{ fontSize: 11, color: commentColor, fontStyle: "italic", lineHeight: 1.5, paddingLeft: 34 }}>
+                                    "{String(s.comment || "").length > 140 ? String(s.comment || "").substring(0, 140) + "..." : String(s.comment || "")}"
+                                  </div>
                                 </div>
-                                <div style={{ fontSize: 11, color: "#475569", fontStyle: "italic", lineHeight: 1.5 }}>
-                                  "{String(s.comment || "").length > 140 ? String(s.comment || "").substring(0, 140) + "..." : String(s.comment || "")}"
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         ) : (
                           <div style={{ fontSize: 11, color: "#94a3b8", fontStyle: "italic", marginTop: 6 }}>Komen tidak tersedia.</div>
@@ -902,25 +935,57 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
                         {/* NOTABLE SAMPLE COMMENTS */}
                         {sub.samples && sub.samples.length > 0 ? (
                           <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 10 }}>
-                            {sub.samples.map((s, sIdx) => (
-                              <div key={sIdx} style={{ position: "relative", padding: "12px 14px 12px 18px", background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(241, 245, 249, 0.9)", borderRadius: 14, boxShadow: "0 2px 8px rgba(15, 23, 42, 0.03)", overflow: "hidden" }}>
-                                <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: "linear-gradient(180deg, #6366f1 0%, #a78bfa 100%)", borderRadius: "4px 0 0 4px" }} />
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                    <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#f5f3ff", color: "#6366f1", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #ddd6fe" }}>
-                                      {s.student ? s.student.charAt(0).toUpperCase() : "👤"}
+                            {sub.samples.map((s, sIdx) => {
+                              const isLingua = s.program === "lingua" || (activeRole === "lingua" && s.program !== "intertest");
+                              const isIntertest = s.program === "intertest" || (activeRole === "intertest" && s.program !== "lingua");
+
+                              const cardBg = isLingua
+                                ? "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)"
+                                : isIntertest
+                                ? "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)"
+                                : "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)";
+
+                              const borderStyle = isLingua
+                                ? "1px solid #1e40af"
+                                : isIntertest
+                                ? "1px solid #7dd3fc"
+                                : "1px solid #334155";
+
+                              const textColor = isLingua ? "#ffffff" : isIntertest ? "#0369a1" : "#ffffff";
+                              const commentColor = isLingua ? "#dbeafe" : isIntertest ? "#334155" : "#cbd5e1";
+                              const circleBg = isLingua ? "rgba(255,255,255,0.2)" : isIntertest ? "rgba(2,132,199,0.18)" : "rgba(255,255,255,0.2)";
+                              const circleBorder = isLingua ? "1px solid rgba(255,255,255,0.35)" : isIntertest ? "1px solid rgba(2,132,199,0.35)" : "1px solid rgba(255,255,255,0.35)";
+                              const icon = isLingua ? "📚" : isIntertest ? "🧮" : "🌐";
+
+                              return (
+                                <div key={sIdx} style={{ position: "relative", padding: "12px 14px", background: cardBg, border: borderStyle, borderRadius: 14, boxShadow: "0 6px 16px rgba(0,0,0,0.08)", overflow: "hidden" }}>
+                                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                      <div style={{ width: 26, height: 26, borderRadius: "50%", background: circleBg, border: circleBorder, color: textColor, fontSize: 13, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" }}>
+                                        {icon}
+                                      </div>
+                                      <span style={{ fontSize: 12, fontWeight: 800, color: textColor, letterSpacing: "0.2px" }}>
+                                        {s.student || "Responden"}
+                                      </span>
                                     </div>
-                                    <span style={{ fontSize: 11, fontWeight: 800, color: "#334155" }}>{s.student || "Responden"}</span>
+                                    <span style={{
+                                      padding: "2px 8px",
+                                      borderRadius: 12,
+                                      background: s.score <= 6 ? (isLingua ? "rgba(220, 38, 38, 0.35)" : "rgba(254, 226, 226, 0.9)") : s.score <= 8 ? (isLingua ? "rgba(217, 119, 6, 0.35)" : "rgba(254, 243, 199, 0.9)") : (isLingua ? "rgba(5, 150, 105, 0.35)" : "rgba(209, 250, 229, 0.9)"),
+                                      color: s.score <= 6 ? (isLingua ? "#fca5a5" : "#b91c1c") : s.score <= 8 ? (isLingua ? "#fde68a" : "#b45309") : (isLingua ? "#a7f3d0" : "#047857"),
+                                      border: `1px solid ${s.score <= 6 ? "#fca5a5" : s.score <= 8 ? "#fde68a" : "#a7f3d0"}`,
+                                      fontSize: 10,
+                                      fontWeight: 800
+                                    }}>
+                                      NPS: {s.score}
+                                    </span>
                                   </div>
-                                  <span style={{ padding: "2px 8px", borderRadius: 12, background: s.score <= 6 ? "rgba(254, 226, 226, 0.75)" : s.score <= 8 ? "rgba(254, 243, 199, 0.75)" : "rgba(209, 250, 229, 0.75)", color: s.score <= 6 ? "#b91c1c" : s.score <= 8 ? "#b45309" : "#047857", border: `1px solid ${s.score <= 6 ? "rgba(252, 165, 165, 0.7)" : s.score <= 8 ? "rgba(252, 211, 77, 0.7)" : "rgba(110, 231, 183, 0.7)"}`, fontSize: 10, fontWeight: 800 }}>
-                                    NPS: {s.score}
-                                  </span>
+                                  <div style={{ fontSize: 11, color: commentColor, fontStyle: "italic", lineHeight: 1.5, paddingLeft: 34 }}>
+                                    "{String(s.comment || "").length > 140 ? String(s.comment || "").substring(0, 140) + "..." : String(s.comment || "")}"
+                                  </div>
                                 </div>
-                                <div style={{ fontSize: 11, color: "#475569", fontStyle: "italic", lineHeight: 1.5 }}>
-                                  "{String(s.comment || "").length > 140 ? String(s.comment || "").substring(0, 140) + "..." : String(s.comment || "")}"
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         ) : (
                           <div style={{ fontSize: 11, color: "#94a3b8", fontStyle: "italic", marginTop: 6 }}>Komen tidak tersedia.</div>
