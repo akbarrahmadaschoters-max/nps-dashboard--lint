@@ -728,7 +728,7 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
 
 
           {/* SECTION 1: EXECUTIVE SUMMARY CHART VISUAL GRAPHIC */}
-          <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 24, marginBottom: 24, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
+          <div style={{ background: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(226, 232, 240, 0.8)", borderRadius: 24, padding: 24, marginBottom: 24, boxShadow: "0 20px 40px -15px rgba(30, 41, 59, 0.05)" }}>
             <div style={{ fontSize: 16, fontWeight: 900, color: "#0f172a", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 20 }}>📊</span> Executive Summary Chart: Distribution per Category & Sub-category
             </div>
@@ -736,19 +736,19 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
               {/* LEFT: CATEGORY VISUAL GRAPHIC */}
-              <div style={{ background: "#f8fafc", border: "1px solid #f1f5f9", borderRadius: 20, padding: 18 }}>
-                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#2563eb", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.85) 100%)", border: "1px solid rgba(226, 232, 240, 0.8)", borderRadius: 20, padding: 20, boxShadow: "0 4px 16px rgba(0, 0, 0, 0.02)" }}>
+                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#2563eb", marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
                   <span>💡</span> Mostly Category
                 </h5>
                 {analytics.topCategories.length === 0 ? <div style={{ fontSize: 12, color: "#94a3b8" }}>Tidak ada data keluhan</div> : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                     {analytics.topCategories.slice(0, 6).map((cat, idx) => (
                       <div key={idx}>
-                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#1e293b", fontWeight: 700 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#0f172a", fontWeight: 700 }}>
                           <span>{cat.name}</span>
-                          <span style={{ color: "#2563eb", fontWeight: 800 }}>{cat.count} ({cat.pct}%)</span>
+                          <span style={{ color: "#2563eb", fontWeight: 800, background: "#eff6ff", border: "1px solid #bfdbfe", padding: "2px 8px", borderRadius: 12, fontSize: 11 }}>{cat.count} ({cat.pct}%)</span>
                         </div>
-                        <div style={{ background: "#e2e8f0", height: 8, borderRadius: 6, marginTop: 5, overflow: "hidden" }}>
+                        <div style={{ background: "#e2e8f0", height: 8, borderRadius: 6, marginTop: 6, overflow: "hidden" }}>
                           <div style={{ width: `${cat.pct}%`, height: "100%", background: "linear-gradient(90deg, #2563eb, #3b82f6)", borderRadius: 6, transition: "width 0.8s ease" }}></div>
                         </div>
                       </div>
@@ -758,19 +758,19 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
               </div>
 
               {/* RIGHT: SUBCATEGORY VISUAL GRAPHIC */}
-              <div style={{ background: "#f8fafc", border: "1px solid #f1f5f9", borderRadius: 20, padding: 18 }}>
-                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#6366f1", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.85) 100%)", border: "1px solid rgba(226, 232, 240, 0.8)", borderRadius: 20, padding: 20, boxShadow: "0 4px 16px rgba(0, 0, 0, 0.02)" }}>
+                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#6366f1", marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
                   <span>🔎</span> Mostly Sub-category
                 </h5>
                 {analytics.topSubcategories.length === 0 ? <div style={{ fontSize: 12, color: "#94a3b8" }}>Tidak ada data subkategori</div> : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                     {analytics.topSubcategories.slice(0, 6).map((sub, idx) => (
                       <div key={idx}>
-                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#1e293b", fontWeight: 700 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#0f172a", fontWeight: 700 }}>
                           <span>{sub.name}</span>
-                          <span style={{ color: "#6366f1", fontWeight: 800 }}>{sub.count} ({sub.pct}%)</span>
+                          <span style={{ color: "#6366f1", fontWeight: 800, background: "#f5f3ff", border: "1px solid #ddd6fe", padding: "2px 8px", borderRadius: 12, fontSize: 11 }}>{sub.count} ({sub.pct}%)</span>
                         </div>
-                        <div style={{ background: "#e2e8f0", height: 8, borderRadius: 6, marginTop: 5, overflow: "hidden" }}>
+                        <div style={{ background: "#e2e8f0", height: 8, borderRadius: 6, marginTop: 6, overflow: "hidden" }}>
                           <div style={{ width: `${sub.pct}%`, height: "100%", background: "linear-gradient(90deg, #6366f1, #8b5cf6)", borderRadius: 6, transition: "width 0.8s ease" }}></div>
                         </div>
                       </div>
@@ -782,39 +782,47 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
           </div>
 
           {/* SECTION 2: DETAILING & NOTABLE SAMPLE COMMENTS */}
-          <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, padding: 24, marginBottom: 26, boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
+          <div style={{ background: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: "1px solid rgba(226, 232, 240, 0.8)", borderRadius: 24, padding: 26, marginBottom: 26, boxShadow: "0 20px 40px -15px rgba(30, 41, 59, 0.05)" }}>
             <div style={{ fontSize: 16, fontWeight: 900, color: "#0f172a", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 20 }}>💬</span> Detailing & Sample Feedback Komentar Nyata
             </div>
-            <div style={{ fontSize: 12, color: "#64748b", marginBottom: 20 }}>Rincian sampel umpan balik langsung dari responden untuk setiap kategori dan subkategori.</div>
+            <div style={{ fontSize: 12, color: "#64748b", marginBottom: 22 }}>Rincian sampel umpan balik langsung dari responden untuk setiap kategori dan subkategori.</div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
               {/* CATEGORY DETAILING & SAMPLES */}
               <div>
-                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#1e293b", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#1e293b", marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
                   <span>💡</span> Detailing Sample Komen Kategori
                 </h5>
                 {analytics.topCategories.length === 0 ? <div style={{ fontSize: 12, color: "#94a3b8" }}>Tidak ada data keluhan</div> : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                     {analytics.topCategories.slice(0, 6).map((cat, idx) => (
-                      <div key={idx} style={{ padding: "12px 14px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 16 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#0f172a", fontWeight: 700 }}>
+                      <div key={idx} style={{ padding: "16px 18px", background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.85) 100%)", border: "1px solid rgba(226, 232, 240, 0.9)", borderRadius: 20, boxShadow: "0 4px 16px rgba(0,0,0,0.02)" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, color: "#0f172a", fontWeight: 800, marginBottom: 10 }}>
                           <span>{cat.name}</span>
-                          <span style={{ color: "#2563eb", fontWeight: 800 }}>{cat.count} respon ({cat.pct}%)</span>
+                          <span style={{ background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", color: "#1d4ed8", border: "1px solid rgba(191, 219, 254, 0.8)", padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 800, boxShadow: "0 2px 6px rgba(37,99,235,0.06)" }}>
+                            {cat.count} respon ({cat.pct}%)
+                          </span>
                         </div>
                         
                         {/* NOTABLE SAMPLE COMMENTS */}
                         {cat.samples && cat.samples.length > 0 ? (
-                          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                          <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 10 }}>
                             {cat.samples.map((s, sIdx) => (
-                              <div key={sIdx} style={{ padding: "8px 12px", background: "#ffffff", borderLeft: "3px solid #2563eb", borderRadius: "0 10px 10px 0", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 10, fontWeight: 700, color: "#64748b", marginBottom: 2 }}>
-                                  <span>💬 {s.student}</span>
-                                  <span style={{ padding: "1px 6px", borderRadius: 10, background: s.score <= 6 ? "#fee2e2" : "#fef3c7", color: s.score <= 6 ? "#dc2626" : "#d97706", fontWeight: 800 }}>
+                              <div key={sIdx} style={{ position: "relative", padding: "12px 14px 12px 18px", background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(241, 245, 249, 0.9)", borderRadius: 14, boxShadow: "0 2px 8px rgba(15, 23, 42, 0.03)", overflow: "hidden" }}>
+                                <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: "linear-gradient(180deg, #2563eb 0%, #60a5fa 100%)", borderRadius: "4px 0 0 4px" }} />
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                    <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#eff6ff", color: "#2563eb", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #bfdbfe" }}>
+                                      {s.student ? s.student.charAt(0).toUpperCase() : "👤"}
+                                    </div>
+                                    <span style={{ fontSize: 11, fontWeight: 800, color: "#334155" }}>{s.student || "Responden"}</span>
+                                  </div>
+                                  <span style={{ padding: "2px 8px", borderRadius: 12, background: s.score <= 6 ? "rgba(254, 226, 226, 0.75)" : s.score <= 8 ? "rgba(254, 243, 199, 0.75)" : "rgba(209, 250, 229, 0.75)", color: s.score <= 6 ? "#b91c1c" : s.score <= 8 ? "#b45309" : "#047857", border: `1px solid ${s.score <= 6 ? "rgba(252, 165, 165, 0.7)" : s.score <= 8 ? "rgba(252, 211, 77, 0.7)" : "rgba(110, 231, 183, 0.7)"}`, fontSize: 10, fontWeight: 800 }}>
                                     NPS: {s.score}
                                   </span>
                                 </div>
-                                <div style={{ fontSize: 11, color: "#334155", fontStyle: "italic", lineHeight: 1.4 }}>
+                                <div style={{ fontSize: 11, color: "#475569", fontStyle: "italic", lineHeight: 1.5 }}>
                                   "{String(s.comment || "").length > 140 ? String(s.comment || "").substring(0, 140) + "..." : String(s.comment || "")}"
                                 </div>
                               </div>
@@ -831,30 +839,38 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
 
               {/* SUBCATEGORY DETAILING & SAMPLES */}
               <div>
-                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#1e293b", marginBottom: 14, display: "flex", alignItems: "center", gap: 6 }}>
+                <h5 style={{ fontSize: 13, fontWeight: 800, color: "#1e293b", marginBottom: 16, display: "flex", alignItems: "center", gap: 6 }}>
                   <span>🔎</span> Detailing Sample Komen Subkategori
                 </h5>
                 {analytics.topSubcategories.length === 0 ? <div style={{ fontSize: 12, color: "#94a3b8" }}>Tidak ada data subkategori</div> : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                     {analytics.topSubcategories.slice(0, 6).map((sub, idx) => (
-                      <div key={idx} style={{ padding: "12px 14px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 16 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "#0f172a", fontWeight: 700 }}>
+                      <div key={idx} style={{ padding: "16px 18px", background: "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.85) 100%)", border: "1px solid rgba(226, 232, 240, 0.9)", borderRadius: 20, boxShadow: "0 4px 16px rgba(0,0,0,0.02)" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, color: "#0f172a", fontWeight: 800, marginBottom: 10 }}>
                           <span>{sub.name}</span>
-                          <span style={{ color: "#6366f1", fontWeight: 800 }}>{sub.count} respon ({sub.pct}%)</span>
+                          <span style={{ background: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)", color: "#6d28d9", border: "1px solid rgba(221, 214, 254, 0.8)", padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 800, boxShadow: "0 2px 6px rgba(124,58,237,0.06)" }}>
+                            {sub.count} respon ({sub.pct}%)
+                          </span>
                         </div>
 
                         {/* NOTABLE SAMPLE COMMENTS */}
                         {sub.samples && sub.samples.length > 0 ? (
-                          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
+                          <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 10 }}>
                             {sub.samples.map((s, sIdx) => (
-                              <div key={sIdx} style={{ padding: "8px 12px", background: "#ffffff", borderLeft: "3px solid #6366f1", borderRadius: "0 10px 10px 0", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 10, fontWeight: 700, color: "#64748b", marginBottom: 2 }}>
-                                  <span>💬 {s.student}</span>
-                                  <span style={{ padding: "1px 6px", borderRadius: 10, background: s.score <= 6 ? "#fee2e2" : "#fef3c7", color: s.score <= 6 ? "#dc2626" : "#d97706", fontWeight: 800 }}>
+                              <div key={sIdx} style={{ position: "relative", padding: "12px 14px 12px 18px", background: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(241, 245, 249, 0.9)", borderRadius: 14, boxShadow: "0 2px 8px rgba(15, 23, 42, 0.03)", overflow: "hidden" }}>
+                                <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: "linear-gradient(180deg, #6366f1 0%, #a78bfa 100%)", borderRadius: "4px 0 0 4px" }} />
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                    <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#f5f3ff", color: "#6366f1", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #ddd6fe" }}>
+                                      {s.student ? s.student.charAt(0).toUpperCase() : "👤"}
+                                    </div>
+                                    <span style={{ fontSize: 11, fontWeight: 800, color: "#334155" }}>{s.student || "Responden"}</span>
+                                  </div>
+                                  <span style={{ padding: "2px 8px", borderRadius: 12, background: s.score <= 6 ? "rgba(254, 226, 226, 0.75)" : s.score <= 8 ? "rgba(254, 243, 199, 0.75)" : "rgba(209, 250, 229, 0.75)", color: s.score <= 6 ? "#b91c1c" : s.score <= 8 ? "#b45309" : "#047857", border: `1px solid ${s.score <= 6 ? "rgba(252, 165, 165, 0.7)" : s.score <= 8 ? "rgba(252, 211, 77, 0.7)" : "rgba(110, 231, 183, 0.7)"}`, fontSize: 10, fontWeight: 800 }}>
                                     NPS: {s.score}
                                   </span>
                                 </div>
-                                <div style={{ fontSize: 11, color: "#334155", fontStyle: "italic", lineHeight: 1.4 }}>
+                                <div style={{ fontSize: 11, color: "#475569", fontStyle: "italic", lineHeight: 1.5 }}>
                                   "{String(s.comment || "").length > 140 ? String(s.comment || "").substring(0, 140) + "..." : String(s.comment || "")}"
                                 </div>
                               </div>
