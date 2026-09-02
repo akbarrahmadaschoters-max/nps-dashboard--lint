@@ -6,8 +6,8 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKNMqjsb1H6ZyGMKwx2
 const DEADLINE_HOUR = 11;
 
 const ROLES = [
-  { key: "lingua", label: "PIC Lingua", emoji: "🔵", color: "#2563eb", subtitle: "NPS Lingua (New IELTS Only)" },
-  { key: "intertest", label: "PIC Intertest", emoji: "🟣", color: "#7c3aed", subtitle: "NPS Intertest" },
+  { key: "lingua", label: "PIC Lingua", icon: "📚", color: "#1e3a8a", darkBg: true, subtitle: "NPS Lingua (New IELTS Only)" },
+  { key: "intertest", label: "PIC Intertest", icon: "🧮", color: "#0369a1", darkBg: false, subtitle: "NPS Intertest" },
 ];
 const TIER = {
   A: { color: "#059669", bg: "#d1fae5", border: "#a7f3d0", label: "Tier A", emoji: "✅", action: "Blasting ke teacher 3x/minggu (Senin, Rabu, Jumat)" },
@@ -53,19 +53,65 @@ function ReportCard({ r, onDelete }) {
   const t = r.tier ? TIER[r.tier] : null;
   const d = new Date(r.createdat || r.createdAt);
   const targetId = r.id || r._id || r.createdAt || r.createdat;
+  const isLingua = r.role === "lingua";
+
+  const cardStyle = isLingua
+    ? {
+        background: "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)",
+        border: "1px solid #1e40af",
+        borderRadius: 24,
+        padding: 22,
+        marginBottom: 18,
+        color: "#ffffff",
+        boxShadow: "0 12px 30px rgba(30, 58, 138, 0.22)"
+      }
+    : {
+        background: "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)",
+        border: "1px solid #7dd3fc",
+        borderRadius: 24,
+        padding: 22,
+        marginBottom: 18,
+        color: "#0c4a6e",
+        boxShadow: "0 12px 30px rgba(2, 132, 199, 0.12)"
+      };
+
+  const titleColor = isLingua ? "#ffffff" : "#0369a1";
+  const subtextColor = isLingua ? "#93c5fd" : "#0284c7";
+  const dateColor = isLingua ? "#cbd5e1" : "#0369a1";
+  const boxBg = isLingua ? "rgba(255, 255, 255, 0.14)" : "rgba(255, 255, 255, 0.85)";
+  const boxBorder = isLingua ? "1px solid rgba(255, 255, 255, 0.25)" : "1px solid rgba(125, 211, 252, 0.8)";
+  const boxLabelColor = isLingua ? "#bfdbfe" : "#0284c7";
+  const boxValColor = isLingua ? "#ffffff" : "#0c4a6e";
 
   return (
-    <div style={S.card}>
+    <div style={cardStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div onClick={() => setOpen(!open)} style={{ cursor: "pointer", flex: 1 }}>
-          <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 4 }}>
-            <span>{role?.emoji}</span>
-            <span style={{ fontSize: 14, fontWeight: 800, color: role?.color }}>{role?.label}</span>
-            <span style={{ fontSize: 12, color: "#64748b" }}>— {r.hari} · {r.periode}</span>
+          <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 6 }}>
+            <div style={{
+              width: 34,
+              height: 34,
+              borderRadius: "50%",
+              background: isLingua ? "rgba(255, 255, 255, 0.2)" : "rgba(2, 132, 199, 0.18)",
+              border: isLingua ? "1px solid rgba(255, 255, 255, 0.35)" : "1px solid rgba(2, 132, 199, 0.35)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 16,
+              boxShadow: "0 2px 6px rgba(0, 0, 0, 0.08)"
+            }}>
+              {isLingua ? "📚" : "🧮"}
+            </div>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 15, fontWeight: 800, color: titleColor }}>{role?.label || (isLingua ? "PIC Lingua" : "PIC Intertest")}</span>
+                <span style={{ fontSize: 12, color: subtextColor, fontWeight: 600 }}>— {r.hari} · {r.periode}</span>
+              </div>
+            </div>
           </div>
-          <div style={{ fontSize: 11, color: "#94a3b8", display: "flex", gap: 8, alignItems: "center" }}>
+          <div style={{ fontSize: 11, color: dateColor, display: "flex", gap: 8, alignItems: "center", marginLeft: 44 }}>
             <span>📅 {isNaN(d.getTime()) ? (r.tanggal || "—") : d.toLocaleDateString("id-ID", { weekday: "short", day: "numeric", month: "short", year: "numeric" })} · 🕐 {isNaN(d.getTime()) ? "" : d.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}</span>
-            {(r.late === true || r.late === "TRUE") && <span style={{ color: "#dc2626", fontWeight: 700, background: "#fee2e2", border: "1px solid #fca5a5", padding: "1px 8px", borderRadius: 10, fontSize: 10 }}>TERLAMBAT</span>}
+            {(r.late === true || r.late === "TRUE") && <span style={{ color: "#dc2626", fontWeight: 800, background: "#fee2e2", border: "1px solid #fca5a5", padding: "1px 8px", borderRadius: 10, fontSize: 10 }}>TERLAMBAT</span>}
           </div>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -80,36 +126,34 @@ function ReportCard({ r, onDelete }) {
               style={{
                 padding: "5px 12px",
                 borderRadius: 16,
-                border: "1px solid #fecaca",
-                background: "#fef2f2",
-                color: "#dc2626",
+                border: isLingua ? "1px solid rgba(252, 165, 165, 0.5)" : "1px solid #fecaca",
+                background: isLingua ? "rgba(220, 38, 38, 0.3)" : "#fef2f2",
+                color: isLingua ? "#fca5a5" : "#dc2626",
                 fontSize: 11,
                 fontWeight: 700,
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                gap: 4,
-                boxShadow: "0 2px 4px rgba(220,38,38,0.05)",
-                transition: "all 0.2s ease"
+                gap: 4
               }}
             >
               <span>🗑️</span> Hapus
             </button>
           )}
-          <span onClick={() => setOpen(!open)} style={{ color: "#94a3b8", fontSize: 11, cursor: "pointer", padding: "4px 6px" }}>{open ? "▲" : "▼"}</span>
+          <span onClick={() => setOpen(!open)} style={{ color: subtextColor, fontSize: 12, cursor: "pointer", padding: "4px 6px", fontWeight: 800 }}>{open ? "▲" : "▼"}</span>
         </div>
       </div>
       {open && (
-        <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #f1f5f9" }}>
+        <div style={{ marginTop: 16, paddingTop: 16, borderTop: isLingua ? "1px solid rgba(255, 255, 255, 0.2)" : "1px solid rgba(125, 211, 252, 0.7)" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 10 }}>
             {[["Responden", r.responden], ["Rate", r.rate ? `${r.rate}%` : "—"], ["NPS", r.nps || "—"]].map(([k, v]) => (
-              <div key={k} style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "10px 12px" }}>
-                <div style={{ fontSize: 10, color: "#64748b", fontWeight: 700, textTransform: "uppercase", marginBottom: 4 }}>{k}</div>
-                <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a" }}>{v || "—"}</div>
+              <div key={k} style={{ background: boxBg, border: boxBorder, borderRadius: 12, padding: "10px 12px" }}>
+                <div style={{ fontSize: 10, color: boxLabelColor, fontWeight: 700, textTransform: "uppercase", marginBottom: 4 }}>{k}</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: boxValColor }}>{v || "—"}</div>
               </div>
             ))}
           </div>
-          {r.actionplan && <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "10px 12px", fontSize: 13, color: "#334155", marginBottom: 10 }}><strong style={{ color: "#64748b" }}>Action Plan: </strong>{r.actionplan}</div>}
+          {r.actionplan && <div style={{ background: boxBg, border: boxBorder, borderRadius: 12, padding: "10px 12px", fontSize: 13, color: boxValColor, marginBottom: 10 }}><strong style={{ color: boxLabelColor }}>Action Plan: </strong>{r.actionplan}</div>}
           {t && <div style={{ padding: "9px 14px", borderRadius: 10, background: t.bg, color: t.color, fontSize: 12, border: `1px solid ${t.border}` }}>{t.emoji} <strong>{t.label}:</strong> {t.action}</div>}
         </div>
       )}
@@ -561,10 +605,12 @@ function AirtableSyncTab({ onDirectSaveToSheets, onPrefillForm }) {
 
         {/* 3 HIGH-CONTRAST EXECUTION PILL BUTTONS */}
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <button onClick={() => handleRunSync("lingua")} disabled={loading} style={{ padding: "12px 22px", borderRadius: 30, border: "none", background: "linear-gradient(135deg, #2563eb, #3b82f6)", color: "#fff", fontWeight: 800, fontSize: 13, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 6px 18px rgba(37,99,235,0.3)", transition: "all 0.2s" }}>
+          <button onClick={() => handleRunSync("lingua")} disabled={loading} style={{ padding: "12px 22px", borderRadius: 30, border: "none", background: "linear-gradient(135deg, #1e3a8a, #1d4ed8)", color: "#fff", fontWeight: 800, fontSize: 13, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 6px 18px rgba(30,58,138,0.3)", display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s" }}>
+            <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12 }}>📚</div>
             {loading && activeRole === "lingua" ? "⏳ Fetching..." : "▶ Run Sync Lingua"}
           </button>
-          <button onClick={() => handleRunSync("intertest")} disabled={loading} style={{ padding: "12px 22px", borderRadius: 30, border: "none", background: "linear-gradient(135deg, #6366f1, #8b5cf6)", color: "#fff", fontWeight: 800, fontSize: 13, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 6px 18px rgba(99,102,241,0.3)", transition: "all 0.2s" }}>
+          <button onClick={() => handleRunSync("intertest")} disabled={loading} style={{ padding: "12px 22px", borderRadius: 30, border: "1px solid #7dd3fc", background: "linear-gradient(135deg, #e0f2fe, #bae6fd)", color: "#0c4a6e", fontWeight: 800, fontSize: 13, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 6px 18px rgba(2,132,199,0.15)", display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s" }}>
+            <div style={{ width: 22, height: 22, borderRadius: "50%", background: "rgba(2,132,199,0.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12 }}>🧮</div>
             {loading && activeRole === "intertest" ? "⏳ Fetching..." : "▶ Run Sync Intertest"}
           </button>
           <button onClick={() => handleRunSync("all_lint")} disabled={loading} style={{ padding: "12px 22px", borderRadius: 30, border: "none", background: "linear-gradient(135deg, #059669, #10b981)", color: "#fff", fontWeight: 800, fontSize: 13, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 6px 18px rgba(5,150,105,0.3)", transition: "all 0.2s" }}>
@@ -1569,15 +1615,42 @@ export default function App() {
             {!selectedRole ? (
               <div>
                 <div style={{ fontSize: 14, color: "#64748b", marginBottom: 16 }}>Pilih role kamu:</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-                  {ROLES.map(role => (
-                    <button key={role.key} onClick={() => setSelectedRole(role.key)}
-                      style={{ padding: "28px 20px", background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 24, cursor: "pointer", color: "#0f172a", fontFamily: "inherit", textAlign: "left", boxShadow: "0 10px 30px rgba(37,99,235,0.04)" }}>
-                      <div style={{ fontSize: 32, marginBottom: 8 }}>{role.emoji}</div>
-                      <div style={{ fontSize: 16, fontWeight: 800, color: role.color }}>{role.label}</div>
-                      <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>{role.subtitle}</div>
-                    </button>
-                  ))}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                  {ROLES.map(role => {
+                    const isLingua = role.key === "lingua";
+                    return (
+                      <button key={role.key} onClick={() => setSelectedRole(role.key)}
+                        style={{
+                          padding: "26px 20px",
+                          background: isLingua ? "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%)" : "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)",
+                          border: isLingua ? "1px solid #1e40af" : "1px solid #7dd3fc",
+                          borderRadius: 24,
+                          cursor: "pointer",
+                          color: isLingua ? "#ffffff" : "#0c4a6e",
+                          fontFamily: "inherit",
+                          textAlign: "left",
+                          boxShadow: isLingua ? "0 10px 30px rgba(30,58,138,0.2)" : "0 10px 30px rgba(2,132,199,0.12)"
+                        }}>
+                        <div style={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: "50%",
+                          background: isLingua ? "rgba(255, 255, 255, 0.2)" : "rgba(2, 132, 199, 0.18)",
+                          border: isLingua ? "1px solid rgba(255, 255, 255, 0.35)" : "1px solid rgba(2, 132, 199, 0.35)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 22,
+                          marginBottom: 12,
+                          boxShadow: "0 4px 10px rgba(0,0,0,0.08)"
+                        }}>
+                          {isLingua ? "📚" : "🧮"}
+                        </div>
+                        <div style={{ fontSize: 18, fontWeight: 800, color: isLingua ? "#ffffff" : "#0369a1" }}>{role.label}</div>
+                        <div style={{ fontSize: 12, color: isLingua ? "#93c5fd" : "#0284c7", marginTop: 4 }}>{role.subtitle}</div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             ) : (
@@ -1640,9 +1713,20 @@ export default function App() {
           <div>
             <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 18, color: "#2563eb" }}>📋 Riwayat Report</div>
             <div style={{ display: "flex", gap: 8, marginBottom: 18, alignItems: "center", flexWrap: "wrap" }}>
-              {[["all","Semua"],["lingua","🔵 Lingua"],["intertest","🟣 Intertest"]].map(([k,l])=>(
-                <button key={k} onClick={()=>setHistFilter(k)} style={{padding:"8px 18px",borderRadius:24,border:histFilter===k?"1px solid transparent":"1px solid #cbd5e1",cursor:"pointer",fontSize:12,fontWeight:700,background:histFilter===k?"#0f172a":"#ffffff",color:histFilter===k?"#fff":"#475569",fontFamily:"inherit"}}>{l}</button>
-              ))}
+              {[["all","Semua"],["lingua","📚 Lingua (Biru Tua)"],["intertest","🧮 Intertest (Biru Muda)"]].map(([k,l])=>{
+                const isSelected = histFilter === k;
+                const isLingua = k === "lingua";
+                const isIntertest = k === "intertest";
+                let bg = "#ffffff", color = "#475569", border = "1px solid #cbd5e1";
+                if (isSelected) {
+                  if (isLingua) { bg = "#1e3a8a"; color = "#ffffff"; border = "1px solid #1e40af"; }
+                  else if (isIntertest) { bg = "#e0f2fe"; color = "#0369a1"; border = "1px solid #7dd3fc"; }
+                  else { bg = "#0f172a"; color = "#ffffff"; border = "1px solid #0f172a"; }
+                }
+                return (
+                  <button key={k} onClick={()=>setHistFilter(k)} style={{padding:"8px 18px",borderRadius:24,border,cursor:"pointer",fontSize:12,fontWeight:700,background:bg,color,fontFamily:"inherit",transition:"all 0.2s"}}>{l}</button>
+                );
+              })}
               <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:12}}>
                 {filtered.length > 0 && (
                   <button onClick={() => exportHistoryToExcel(filtered)} style={{ padding: "7px 16px", borderRadius: 20, border: "1px solid #059669", background: "linear-gradient(135deg, #059669, #10b981)", color: "#ffffff", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, boxShadow: "0 2px 8px rgba(16,185,129,0.2)" }}>
